@@ -7,7 +7,7 @@
 **Problem Statement:** Groups frequently lose track of shared expenses, custom splits, and external repayments across chats and spreadsheets. Fair Share maintains one clear, validated ledger that explains who paid, who owes, and what remains to settle.
 **GitHub Repository:** https://github.com/bharadwaj-13/fairshare
 **Deployed Application:** https://fairshare.tinkeringspaces.com
-**Demo Video:** https://github.com/bharadwaj-13/fairshare/raw/main/docs/demo/fairshare-demo.mp4
+**Demo Video:** https://raw.githubusercontent.com/bharadwaj-13/fairshare/main/docs/demo/fairshare-demo.mp4
 **Tech Stack:** MongoDB, Express, React, Node.js, Vite, Supabase Auth, Razorpay, Zod, Mongoose, Vercel
 
 ## Major features
