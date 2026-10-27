@@ -121,7 +121,7 @@ npm test
 npm run build
 ```
 
-`dist/` contains the React frontend. Production is a full-stack Vercel deployment: the static React build and the Express API run on the same origin, with `api/index.js` deployed as a Vercel serverless function and `/api/*` rewritten to it by `vercel.json`. `VITE_API_URL` stays empty for this setup. The current production API is available at `https://fairsharee.vercel.app/api/health` and also through the custom domain. For a separate frontend host, configure `VITE_API_URL`, set `CLIENT_ORIGIN` on the server, and allow the frontend URL in Supabase.
+`dist/` contains the React frontend. Production is a full-stack Vercel deployment: the static React build and the Express API run on the same origin, with `api/index.js` deployed as a Vercel serverless function and `/api/*` rewritten to it by `vercel.json`. `VITE_API_URL` stays empty for this setup. The production API is available at `https://fairshare.tinkeringspaces.com/api/health`. For a separate frontend host, configure `VITE_API_URL`, set `CLIENT_ORIGIN` on the server, and allow the frontend URL in Supabase.
 
 The API can start without MongoDB credentials for a health check, but account routes return 503 until both MongoDB and Supabase are configured. Missing payment credentials return 503 from checkout. There is no insecure server-side demo bypass.
 
