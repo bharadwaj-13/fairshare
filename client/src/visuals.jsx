@@ -1,0 +1,6 @@
+import React from 'react';
+export function BrandMark(){return <span className="brand-mark" aria-hidden="true"><span/><span/></span>}
+export function groupType(group){return group.type==='Trip'?'Trip':group.type==='Home'?'Home':'Friends'}
+export const groupTypes=['Trip','Home','Friends'];
+export function GroupMark({group,type,className=''}){const kind=type||groupType(group||{});return <span className={`group-mark ${kind.toLowerCase()} ${className}`} aria-hidden="true"><i/><i/><i/></span>}
+export function NavGlyph({name}){const paths={Overview:<><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></>,Expenses:<><path d="M6 3h12v18l-3-2-3 2-3-2-3 2Z"/><path d="M9 8h6M9 12h6"/></>,Groups:<><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M17 5a3 3 0 0 1 0 6M21 21v-3a6 6 0 0 0-3-5"/></>,People:<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>};return <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">{paths[name]||paths.Overview}</svg>}
