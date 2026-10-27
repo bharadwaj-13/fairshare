@@ -35,7 +35,7 @@ export default function Landing({onAuth}){
     <div className="benefit-grid">
      <article><span>01</span><h3>Flexible splits</h3><p>Divide expenses equally, by exact amounts, percentages, or shares.</p></article>
      <article><span>02</span><h3>Balances that explain themselves</h3><p>See who paid, who owes, and how every settlement changed the total.</p></article>
-     <article><span>03</span><h3>One shared record</h3><p>Keep groups, notes, comments, reminders, and activity in the same workspace.</p></article>
+     <article><span>03</span><h3>One shared record</h3><p>Keep groups, expenses, notes, comments, and payments in the same workspace.</p></article>
     </div>
    </section>
    <section className="landing-section workflow" id="how">

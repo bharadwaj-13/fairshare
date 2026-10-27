@@ -48,7 +48,7 @@ Never prefix database credentials or payment secrets with `VITE_`. Never commit 
 - Expenses with equal, exact, percentage, and weighted-share splits; paid-by selection, participant selection, dates, categories, notes, editing, deletion, and comments.
 - Split values use integer minor units and largest-remainder rounding. Totals remain exact.
 - Settlement recording and recalculated balances. Settlement recording does **not** transfer money.
-- Search, category filters, recent-date filters, activity feed, and four separate currency ledgers (INR, USD, EUR, GBP). No exchange conversion is performed.
+- Search, category filters, recent-date filters, and four separate currency ledgers (INR, USD, EUR, GBP). No exchange conversion is performed.
 - Supabase Google OAuth and email/password signup, login, logout, email confirmation support, password reset, and verified backend sessions.
 - Shared workspace invitations. The owner adds a contact with an email, opens their details, and generates an email-bound invitation link valid for seven days. The recipient signs in with that email. Links are not emailed automatically.
 - Plus category insights, spending summaries, and CSV export. Demo Plus preview is explicitly separate from a paid entitlement.
@@ -112,7 +112,7 @@ Contact IDs are ledger identities and are matched to signed-in users by verified
 
 The API validates ledger structure, membership references, unique record IDs, amounts, totals, and currency codes. State writes use an optimistic version check: conflicts return HTTP 409 and require refreshing. There is no automatic live polling or conflict merge. Bound document limits keep the initial whole-workspace API manageable; a production app should move large ledgers to paginated collections.
 
-This is an independently branded functional foundation, not a complete reproduction of every Splitwise feature. Not implemented: receipt uploads/scanning, recurring jobs, email delivery, push notifications, bank/UPI transfers, FX conversion, account deletion, multiple workspaces, immutable audit history, moderation, payment refunds/revocation, and subscriptions. The activity feed is a workspace history, not a tamper-proof audit log. Members can edit each other's ledger entries; review roles and permissions before broader deployment.
+This is an independently branded functional foundation, not a complete reproduction of every Splitwise feature. Not implemented: receipt uploads/scanning, recurring jobs, email delivery, push notifications, bank/UPI transfers, FX conversion, account deletion, multiple workspaces, immutable audit history, moderation, payment refunds/revocation, and subscriptions. Members can edit each other's ledger entries; review roles and permissions before broader deployment.
 
 ## Build and deploy
 
