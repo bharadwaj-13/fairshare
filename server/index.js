@@ -28,4 +28,5 @@ app.post('/api/billing/verify',async(req,res)=>{if(!razorpay)return res.status(5
 app.get('/api/export',async(req,res)=>{const e=await Entitlement.findOne({userId:req.user.id});if(!e||e.expiresAt<=new Date())return res.status(403).json({error:'CSV exports are included with Plus.'});const w=await workspace(req);const cell=v=>'"'+String(v).replace(/"/g,'""').replace(/^[=+@\-\t\r]/,"'")+'"';const csv=['Date,Description,Currency,Amount,Category',...w.data.expenses.map(e=>[e.date,e.description,e.currency,(e.amount/100).toFixed(2),e.category].map(cell).join(','))].join('\n');res.type('text/csv').send(csv);});
 app.use((err,req,res,next)=>{console.error(err.name,err.message);res.status(err instanceof z.ZodError?400:500).json({error:err instanceof z.ZodError?'Invalid request.':'The request could not be completed. Please try again.'});});
 if(process.env.MONGODB_URI){await mongoose.connect(process.env.MONGODB_URI);await Promise.all([Membership.init(),Purchase.init(),Entitlement.init(),Invite.init()]);}else console.log('MongoDB is not configured. API remains unavailable; demo runs in the browser.');
-app.listen(process.env.PORT||4000,()=>console.log(`Fairshare API listening on ${process.env.PORT||4000}`));
+if(!process.env.VERCEL)app.listen(process.env.PORT||4000,()=>console.log(`Fair Share API listening on ${process.env.PORT||4000}`));
+export default app;
