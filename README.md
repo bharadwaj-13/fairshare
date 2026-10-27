@@ -12,7 +12,7 @@ cp .env.example .env
 npm run dev
 ```
 
-Open **http://localhost:5180/** for Fairshare. The React demo works without credentials. Fairshare uses port 5180 with strict port checking, so it will fail clearly if that port is occupied instead of silently switching addresses. Port 5173 may belong to a different app. Changes persist in the current browser's localStorage. It starts with clearly labeled fictional sample data and preserves any existing local sample edits. Choose **Start my workspace** to open a separate empty local workspace. Use Settings to switch between the two. Clearing My workspace requires an explicit confirmation and leaves the sample workspace untouched.
+Open **http://localhost:5180/** for Fairshare. Fairshare uses port 5180 with strict port checking, so it will fail clearly if that port is occupied instead of silently switching addresses. Port 5173 may belong to a different app. The landing page is public; the expense workspace requires a Supabase account.
 
 To enable real accounts, configure `.env` and start the Express API in another terminal:
 
@@ -49,7 +49,7 @@ Never prefix database credentials or payment secrets with `VITE_`. Never commit 
 - Split values use integer minor units and largest-remainder rounding. Totals remain exact.
 - Settlement recording and recalculated balances. Settlement recording does **not** transfer money.
 - Search, category filters, recent-date filters, activity feed, and four separate currency ledgers (INR, USD, EUR, GBP). No exchange conversion is performed.
-- Supabase email/password signup, login, logout, email confirmation support, password reset, and verified backend sessions.
+- Supabase Google OAuth and email/password signup, login, logout, email confirmation support, password reset, and verified backend sessions.
 - Shared workspace invitations. The owner adds a contact with an email, opens their details, and generates an email-bound invitation link valid for seven days. The recipient signs in with that email. Links are not emailed automatically.
 - Plus category insights, spending summaries, and CSV export. Demo Plus preview is explicitly separate from a paid entitlement.
 - Razorpay order creation, Standard Checkout, server signature verification, payment capture verification, and signed webhook handling.
@@ -57,7 +57,7 @@ Never prefix database credentials or payment secrets with `VITE_`. Never commit 
 
 ## Revised experience
 
-The original Fairshare two-bar logo and soft card-based overview are restored. Group cards use locally stored monochrome editorial photographs instead of emoji covers. The group form offers Trip, Home, and Friends image choices; there is no emoji picker. The dashboard combines groups and recent expenses with settlement and spending panels. Quick entry remains available in an expandable section. Group membership and payment directions use plain language. See ASSETS.md for image provenance and prompts.
+The original Fairshare two-bar logo and soft card-based overview are restored. Groups use one neutral visual treatment, with no trip, home, or friends category to choose during setup. The dashboard combines groups and recent expenses with settlement and spending panels. Quick entry remains available in an expandable section. Group membership and payment directions use plain language.
 
 - **Quick entry:** type `Lunch 1200` or `Dinner INR 1,200.50`, choose a group, and save an equal split directly. The preview shows the total and your share. Select the full form for a custom payer or split. The default category is Food & drinks; change it in the full form when appropriate.
 - **First-time setup:** create a group and add names inline, without email or accounts. The first-group flow continues into the expense form.
@@ -90,7 +90,8 @@ Future premium candidates: receipt OCR/itemization, recurring-expense automation
 1. Create a Supabase project and enable email/password authentication.
 2. Add your frontend origin to Auth → URL Configuration → Site URL and allowed redirect URLs. Include the frontend root and its `?reset=1` password recovery route as permitted by your redirect configuration.
 3. Put the URL and publishable/anon key in both the server and frontend variables listed above. No service-role key is needed.
-4. Restart both processes. Sign in through the profile control. Real accounts start empty; demo data is never uploaded.
+4. For Google sign-in, create a Google Web OAuth client, register `https://irehequxgozvpqrkqzel.supabase.co/auth/v1/callback` as an authorized redirect URI, then enable Google under Auth → Sign In / Providers with its client ID and secret.
+5. Restart both processes. Sign in from the landing page. New accounts start with an empty workspace.
 
 The Express middleware verifies bearer tokens using `supabase.auth.getUser(token)`, rather than trusting browser user IDs. All state is loaded through authenticated membership lookups.
 
@@ -120,13 +121,13 @@ npm test
 npm run build
 ```
 
-`dist/` contains the React frontend. The provided Sites deployment is an owner-private **frontend demo**; Sites does not run this Node/Express server. Deploy the API on a Node host (for example, a container service), connect MongoDB, and serve the frontend separately or behind the same reverse proxy. For a separate frontend host, configure `VITE_API_URL` before building, set `CLIENT_ORIGIN` on the server, and allow the frontend URL in Supabase. Use HTTPS for both. Keep SPA fallback routing enabled (this app uses internal state and root query parameters).
+`dist/` contains the React frontend. Production is a full-stack Vercel deployment: the static React build and the Express API run on the same origin, with `api/index.js` deployed as a Vercel serverless function and `/api/*` rewritten to it by `vercel.json`. `VITE_API_URL` stays empty for this setup. The current production API is available at `https://fairsharee.vercel.app/api/health` and also through the custom domain. For a separate frontend host, configure `VITE_API_URL`, set `CLIENT_ORIGIN` on the server, and allow the frontend URL in Supabase.
 
 The API can start without MongoDB credentials for a health check, but account routes return 503 until both MongoDB and Supabase are configured. Missing payment credentials return 503 from checkout. There is no insecure server-side demo bypass.
 
 ## Validation
 
-`npm test` runs 10 tests covering largest-remainder rounding, invalid splits, settlement effects, zero-sum ledgers, currency separation, quick-entry parsing, duplicate detection, summary calculation, and search. `npm run build` validates the React bundle. Live auth, MongoDB collaboration, and captured payment flows require your credentials and must be integration-tested before production use.
+`npm test` runs 10 tests covering largest-remainder rounding, invalid splits, settlement effects, zero-sum ledgers, currency separation, quick-entry parsing, duplicate detection, summary calculation, and search. `npm run build` validates the React bundle. MongoDB and Supabase are configured in production. Razorpay checkout still requires its three server-side credentials before live payment testing.
 
 ## Reference documentation
 
