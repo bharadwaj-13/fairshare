@@ -1,6 +1,70 @@
 # Fairshare
 
-A minimal expense-sharing app built with **MongoDB, Express, React, and Node**, with Supabase authentication and Razorpay checkout. The interface uses warm neutrals, soft violet, gentle borders, and responsive layouts.
+A complete expense-sharing application built with **MongoDB, Express, React, and Node**, with Supabase authentication and Razorpay checkout.
+
+**Live application:** [fairshare.tinkeringspaces.com](https://fairshare.tinkeringspaces.com)
+**Demo video:** [watch the product walkthrough](docs/demo/fairshare-demo.mp4)
+
+## Problem statement
+
+Shared trips, flats, meals, and projects create a repeated coordination problem: one person pays, several people owe different amounts, payments happen outside the app, and the group loses track of the current balance. Spreadsheets and chat messages preserve fragments of the story but do not maintain a reliable ledger.
+
+## Target users
+
+- Friends sharing travel and social expenses.
+- Flatmates managing rent, utilities, groceries, and household purchases.
+- Small teams splitting meals or event costs.
+- Couples and families who want a shared record without accounting complexity.
+
+## Solution
+
+Fair Share keeps groups, expenses, exact split rules, comments, settlements, and simplified debts in one authenticated workspace. Money is stored in integer minor units, balances are calculated separately per currency, and every saved payment immediately updates what each person owes. The product explains the result in plain language so a new user can create a group and record the first expense without training.
+
+## Core workflows
+
+1. **Create a group:** add people by name immediately and attach email addresses only when invitations are needed.
+2. **Record an expense:** select the payer, participants, currency, category, date, and an equal, exact, percentage, or weighted-share split.
+3. **Understand balances:** inspect group ledgers, search and filter expenses, and use simplified debts to see the minimum useful payment directions.
+4. **Settle up:** record an external UPI, bank, cash, or other payment and recalculate the ledger without moving money inside Fair Share.
+5. **Invite and analyze:** create an email-bound workspace invitation, view Plus spending insights, or export CSV data with an active entitlement.
+
+## Engineering highlights
+
+- Supabase sessions are verified again by the Express API; browser user IDs are never trusted directly.
+- MongoDB stores workspaces, memberships, invitations, purchases, and time-limited entitlements.
+- Zod validates bounded workspace payloads and cross-record references before persistence.
+- Versioned writes provide optimistic concurrency protection and return HTTP 409 on conflicts.
+- Split calculations use paise/cents and largest-remainder rounding, keeping totals exact.
+- Razorpay orders, checkout signatures, captured payment details, and signed webhooks are verified server-side.
+- Helmet, CORS restrictions, rate limiting, payload limits, spreadsheet-injection-safe CSV output, and environment-only secrets protect exposed surfaces.
+
+## Technology stack
+
+| Layer | Technology | Responsibility |
+| --- | --- | --- |
+| Frontend | React 19, Vite | Responsive UI, forms, filtering, local drafts, optimistic interaction states |
+| API | Node.js, Express 5 | Authenticated routes, validation, persistence, invitations, billing |
+| Database | MongoDB Atlas, Mongoose | Shared workspace and billing records |
+| Authentication | Supabase Auth | Google OAuth and email/password identity |
+| Payments | Razorpay | Fixed 30-day Plus passes |
+| Validation | Zod | Input bounds and ledger integrity |
+| Hosting | Vercel | Static frontend and serverless Express API on one origin |
+| Testing | Node test runner | Splits, balances, settlements, parsing, search, and duplicate detection |
+
+## Architecture
+
+```mermaid
+flowchart LR
+  U[Browser] --> R[React + Vite]
+  R -->|Supabase session| S[Supabase Auth]
+  R -->|Bearer token + JSON| E[Express API]
+  E -->|Verify token| S
+  E -->|Validated workspace data| M[(MongoDB Atlas)]
+  E -->|Create and verify orders| P[Razorpay]
+  P -->|Signed webhook| E
+```
+
+The frontend and API are served from the same production origin. Protected API requests include a Supabase bearer token; Express verifies it with Supabase before resolving the user's MongoDB membership. See [the architecture document](docs/ARCHITECTURE.md) for the data model, request flow, and trade-offs.
 
 ## Run locally
 
